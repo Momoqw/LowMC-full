@@ -1,0 +1,55 @@
+from itertools import product
+
+def check_equation1(dx0, dx1, dx2, dz0, dz1, dz2):
+    """
+    Check equation 1:
+    (1 ⊕ Δx₀)(1 ⊕ Δx₁)(1 ⊕ Δx₂) = (1 ⊕ Δz₀)(1 ⊕ Δz₁)(1 ⊕ Δz₂)
+    """
+    left = (1 ^^ dx0) & (1 ^^ dx1) & (1 ^^ dx2)
+    right = (1 ^^ dz0) & (1 ^^ dz1) & (1 ^^ dz2)
+    return left == right
+
+def check_equation2(dx0, dx1, dx2, dz0, dz1, dz2):
+    """
+    Check equation 2:
+    (1 ⊕ Δx₀)(1 ⊕ Δx₁)(1 ⊕ Δx₂) = Δx₀Δz₀ ⊕ Δx₁Δz₁ ⊕ Δx₂Δz₂ ⊕ 1
+    """
+    left = (1 ^^ dx0) & (1 ^^ dx1) & (1 ^^ dx2)
+    right = (dx0 & dz0) ^^ (dx1 & dz1) ^^ (dx2 & dz2) ^^ 1
+    return left == right
+
+# Count statistics
+total_cases = 0
+eq1_true = 0
+eq2_true = 0
+both_true = 0
+
+# Enumerate all possible boolean value combinations
+for dx0, dx1, dx2, dz0, dz1, dz2 in product([0, 1], repeat=6):
+    total_cases += 1
+    
+    # Check both equations
+    is_eq1 = check_equation1(dx0, dx1, dx2, dz0, dz1, dz2)
+    is_eq2 = check_equation2(dx0, dx1, dx2, dz0, dz1, dz2)
+    
+    if is_eq1:
+        eq1_true += 1
+    if is_eq2:
+        eq2_true += 1
+    if is_eq1 and is_eq2:
+        both_true += 1
+
+# Output results
+print("=" * 60)
+print("Boolean Equation Probability Analysis")
+print("=" * 60)
+print(f"\nTotal cases: {total_cases}")
+print(f"\nEquation 1:")
+print(f"  (1 ⊕ Δx₀)(1 ⊕ Δx₁)(1 ⊕ Δx₂) = (1 ⊕ Δz₀)(1 ⊕ Δz₁)(1 ⊕ Δz₂)")
+print(f"  True cases: {eq1_true}")
+print(f"  Probability: {eq1_true/total_cases}")
+
+print(f"\nEquation 2:")
+print(f"  (1 ⊕ Δx₀)(1 ⊕ Δx₁)(1 ⊕ Δx₂) = Δx₀Δz₀ ⊕ Δx₁Δz₁ ⊕ Δx₂Δz₂ ⊕ 1")
+print(f"  True cases: {eq2_true}")
+print(f"  Probability: {eq2_true/total_cases}")
